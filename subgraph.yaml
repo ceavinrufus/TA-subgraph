@@ -1,0 +1,74 @@
+specVersion: 1.3.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: RentalPayments
+    network: sepolia
+    source:
+      address: "0xee80846407d538dD5851E4710477AF7FcCd4057B"
+      abi: RentalPayments
+      startBlock: 8255395
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - BookingCancelled
+        - DisputePeriodUpdated
+        - DisputeRaised
+        - DisputeRaisedByGuest
+        - DisputeRaisedByHost
+        - DisputeResolved
+        - FeeStructureUpdated
+        - GuestDepositClaimed
+        - GuestDepositRefunded
+        - GuestDisputeLost
+        - GuestDisputeWon
+        - HostDisputeLost
+        - HostDisputeWon
+        - PaymentInitiated
+        - PaymentReleased
+        - RoleGranted
+        - RoleRevoked
+      abis:
+        - name: RentalPayments
+          file: ./abis/RentalPayments.json
+      eventHandlers:
+        - event: BookingCancelled(uint256,address,indexed address,indexed address,uint256)
+          handler: handleBookingCancelled
+        - event: DisputePeriodUpdated(uint256)
+          handler: handleDisputePeriodUpdated
+        - event: DisputeRaised(uint256)
+          handler: handleDisputeRaised
+        - event: DisputeRaisedByGuest(indexed uint256,indexed address)
+          handler: handleDisputeRaisedByGuest
+        - event: DisputeRaisedByHost(indexed uint256,indexed address)
+          handler: handleDisputeRaisedByHost
+        - event: DisputeResolved(uint256,bool)
+          handler: handleDisputeResolved
+        - event: FeeStructureUpdated(uint256,uint256,uint256)
+          handler: handleFeeStructureUpdated
+        - event: GuestDepositClaimed(uint256,indexed address,uint256)
+          handler: handleGuestDepositClaimed
+        - event: GuestDepositRefunded(uint256,indexed address,uint256)
+          handler: handleGuestDepositRefunded
+        - event: GuestDisputeLost(indexed uint256,indexed address)
+          handler: handleGuestDisputeLost
+        - event: GuestDisputeWon(indexed uint256,indexed address)
+          handler: handleGuestDisputeWon
+        - event: HostDisputeLost(indexed uint256,indexed address)
+          handler: handleHostDisputeLost
+        - event: HostDisputeWon(indexed uint256,indexed address)
+          handler: handleHostDisputeWon
+        - event: PaymentInitiated(uint256,indexed address,indexed address,uint256,uint256)
+          handler: handlePaymentInitiated
+        - event: PaymentReleased(uint256,indexed address,uint256)
+          handler: handlePaymentReleased
+        - event: RoleGranted(indexed address,string)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed address,string)
+          handler: handleRoleRevoked
+      file: ./src/rental-payments.ts

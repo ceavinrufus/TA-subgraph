@@ -1,0 +1,160 @@
+type BookingCancelled @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  cancelledBy: Bytes! # address
+  renter: Bytes! # address
+  owner: Bytes! # address
+  refundAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DisputePeriodUpdated @entity(immutable: true) {
+  id: Bytes!
+  newDisputePeriod: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DisputeRaised @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DisputeRaisedByGuest @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  guest: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DisputeRaisedByHost @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  host: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DisputeResolved @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  favorRenter: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FeeStructureUpdated @entity(immutable: true) {
+  id: Bytes!
+  commission: BigInt! # uint256
+  deposit: BigInt! # uint256
+  hostPayment: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GuestDepositClaimed @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  owner: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GuestDepositRefunded @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  renter: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GuestDisputeLost @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  guest: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GuestDisputeWon @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  guest: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type HostDisputeLost @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  host: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type HostDisputeWon @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  host: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PaymentInitiated @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  renter: Bytes! # address
+  owner: Bytes! # address
+  amount: BigInt! # uint256
+  guestDeposit: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PaymentReleased @entity(immutable: true) {
+  id: Bytes!
+  bookingId: BigInt! # uint256
+  owner: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RoleGranted @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  role: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RoleRevoked @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  role: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

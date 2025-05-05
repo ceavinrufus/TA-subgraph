@@ -1,0 +1,8 @@
+{
+  "sepolia": {
+    "RentalPayments": {
+      "address": "0xee80846407d538dD5851E4710477AF7FcCd4057B",
+      "startBlock": 8255395
+    }
+  }
+}
