@@ -1,3 +1,4 @@
+import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import {
   BookingCancelled as BookingCancelledEvent,
   DisputePeriodUpdated as DisputePeriodUpdatedEvent,
@@ -18,6 +19,7 @@ import {
   RoleRevoked as RoleRevokedEvent,
 } from "../generated/RentalPayments/RentalPayments";
 import {
+  HostReputation,
   BookingCancelled,
   DisputePeriodUpdated,
   DisputeRaised,
@@ -36,6 +38,50 @@ import {
   RoleGranted,
   RoleRevoked,
 } from "../generated/schema";
+
+function updateHostReputation(
+  host: Bytes,
+  isRaised: boolean, // True for raising a dispute, false for resolving
+  timestamp: BigInt,
+  won: boolean = false // Only relevant when resolving a dispute
+): void {
+  let reputation = HostReputation.load(host);
+  if (!reputation) {
+    reputation = new HostReputation(host);
+    reputation.totalDisputes = BigInt.fromI32(0);
+    reputation.disputesWon = BigInt.fromI32(0);
+    reputation.disputesLost = BigInt.fromI32(0);
+    reputation.reputationScore = BigInt.fromI32(0);
+    reputation.lastRaiseDisputeTimestamp = BigInt.fromI32(0);
+    reputation.lastResolveDisputeTimestamp = BigInt.fromI32(0);
+    reputation.disputesRaised = BigInt.fromI32(0);
+  }
+
+  if (isRaised) {
+    // Handle dispute raised
+    reputation.disputesRaised = reputation.disputesRaised.plus(
+      BigInt.fromI32(1)
+    );
+    reputation.lastRaiseDisputeTimestamp = timestamp;
+  } else {
+    // Handle dispute resolved
+    reputation.totalDisputes = reputation.totalDisputes.plus(BigInt.fromI32(1));
+    if (won) {
+      reputation.disputesWon = reputation.disputesWon.plus(BigInt.fromI32(1));
+    } else {
+      reputation.disputesLost = reputation.disputesLost.plus(BigInt.fromI32(1));
+    }
+
+    reputation.lastResolveDisputeTimestamp = timestamp;
+
+    // Example reputation score calculation
+    reputation.reputationScore = reputation.disputesWon.minus(
+      reputation.disputesLost
+    );
+  }
+
+  reputation.save();
+}
 
 export function handleBookingCancelled(event: BookingCancelledEvent): void {
   let entity = new BookingCancelled(
@@ -112,6 +158,9 @@ export function handleDisputeRaisedByHost(
   entity.transactionHash = event.transaction.hash;
 
   entity.save();
+
+  // Update host reputation for raising a dispute
+  updateHostReputation(event.params.host, true, event.block.timestamp);
 }
 
 export function handleDisputeResolved(event: DisputeResolvedEvent): void {
@@ -219,6 +268,9 @@ export function handleHostDisputeLost(event: HostDisputeLostEvent): void {
   entity.transactionHash = event.transaction.hash;
 
   entity.save();
+
+  // Update host reputation for resolving a dispute (lost)
+  updateHostReputation(event.params.host, false, event.block.timestamp, false);
 }
 
 export function handleHostDisputeWon(event: HostDisputeWonEvent): void {
@@ -233,6 +285,9 @@ export function handleHostDisputeWon(event: HostDisputeWonEvent): void {
   entity.transactionHash = event.transaction.hash;
 
   entity.save();
+
+  // Update host reputation for resolving a dispute (won)
+  updateHostReputation(event.params.host, false, event.block.timestamp, true);
 }
 
 export function handlePaymentInitiated(event: PaymentInitiatedEvent): void {

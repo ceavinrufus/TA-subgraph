@@ -1,3 +1,14 @@
+type HostReputation @entity(immutable: false) {
+  id: Bytes! # Host address
+  totalDisputes: BigInt! # Total disputes involving the host
+  disputesWon: BigInt! # Disputes won by the host
+  disputesLost: BigInt! # Disputes lost by the host
+  reputationScore: BigInt! # Calculated reputation score
+  lastRaiseDisputeTimestamp: BigInt! # Timestamp of the last raise dispute
+  lastResolveDisputeTimestamp: BigInt! # Timestamp of the last resolve dispute
+  disputesRaised: BigInt! # Number of disputes raised by the host
+}
+
 type BookingCancelled @entity(immutable: true) {
   id: Bytes!
   bookingId: BigInt! # uint256
